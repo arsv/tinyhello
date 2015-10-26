@@ -1,0 +1,3 @@
+hello_*
+!hello_*.s
+*.o

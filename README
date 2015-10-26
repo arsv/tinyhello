@@ -1,0 +1,35 @@
+This is a set of tiny Hello world executables for Linux.
+All they do is
+
+    write(1, "Hello!\n", 7)
+    _exit(0)
+
+but it's done in as little bytes as possible. This particular
+implementation stores the string in ELF header padding and
+squashes Ehdr against Phdr on little-endian targets.
+
+For context and the origins of the size-reducing tricks, see
+
+    http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html
+    http://mainisusuallyafunction.blogspot.com/2015/01/151-byte-static-linux-binary-in-rust.html
+    http://hookrace.net/blog/nim-binary-size/
+
+Unlike the x86-focused projects above, this one attempts
+to be relatively portable. GNU binutils are used instead of nasm,
+and it is expected to work well with cross-compiling toolchains.
+
+For most configurations, run something like
+
+    make ARCH=arm CROSS=arm-linux-gnueabi-
+
+or set both variables in Makefile.
+To build x86_32 with a native x86_64 toolchain, set
+
+    AS = as --x32
+    LD = ld -melf32_x86_64
+
+Run resulting executables with appropriate qemu:
+
+    qemu-arm ./hello_arm
+
+Use -strace option to verify it's working properly.
